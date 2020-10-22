@@ -10,11 +10,11 @@ const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
 const isNumber = (val) => !isNaN(Number(val));
-const validSection = (val) => {
-  var regexSection = /[A-F]{1}/;
+// const validSection = (val) => {
+//   var regexSection = /[A-F]{1}/;
 
-  return regexSection.test(val);
-};
+//   return regexSection.test(val);
+// };
 
 const AddTeacher = (props) => {
   const [classList, setClassList] = useState(["1"]);

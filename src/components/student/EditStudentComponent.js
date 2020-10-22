@@ -1,8 +1,8 @@
-import React from "react";
-import { Table, Button, Label, Col, Row } from "reactstrap";
+import React, { useState } from "react";
+
+import { Button, Label, Col, Row } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { selectAllStudents, deleteStudent, addStudent } from "../redux/student";
+import { editStudent, selectStudentById } from "./studentSlice";
 import { Control, Errors, Form } from "react-redux-form";
 import { withRouter } from "react-router-dom";
 
@@ -16,60 +16,40 @@ const validSection = (val) => {
   return regexSection.test(val);
 };
 
-const RenderStudents = () => {
+const EditStudent = (props) => {
   const dispatch = useDispatch();
-  const students = useSelector(selectAllStudents);
-  console.log(students);
 
-  if (students.studentListaaa == null) {
-    return (
-      <tr>
-        <td>No available students</td>
-      </tr>
-    );
-  } else {
-    return (
-      <React.Fragment>
-        {students.studentListaaa.map((student) => {
-          return (
-            <tr key={student.id}>
-              <td>{student.name}</td>
-              <td>{student.rollNo}</td>
-              <td>{student.classNo}</td>
-              <td>{student.section}</td>
-              <td>
-                <span className='mr-1'>
-                  <Link className='btn btn-success' to={`/students/${student.id}`}>
-                    Edit
-                  </Link>
-                </span>
-                <span>
-                  {/* <Button color='danger' onClick={(event) => deleteStudentSubmitEventHandler(event, student.id)}>
-                    Delete
-                  </Button> */}
-                  <Button color='danger' onClick={() => dispatch(deleteStudent(student.id))}>
-                    Delete
-                  </Button>
-                </span>
-              </td>
-            </tr>
-          );
-        })}
-      </React.Fragment>
-    );
-  }
-};
-const Students = () => {
-  const dispatch = useDispatch();
+  const student = useSelector((state) => selectStudentById(state, props.studentIDparam));
+  const [name, setName] = useState(student.name);
+  const [rollNo, setRollNo] = useState(student.rollNo);
+  const [classNo] = useState(student.classNo);
+  const [section, setSection] = useState(student.section);
+
   return (
     <div>
-      <Form model='student' onSubmit={(values) => dispatch(addStudent(values))}>
+      <Form
+        model='student'
+        onSubmit={(values) => {
+          const valueswithid = {
+            id: student.id,
+            name: values.name,
+            rollNo: values.rollNo,
+            classNo: values.classNo,
+            section: values.section,
+          };
+
+          dispatch(editStudent(valueswithid));
+          alert("Sucesful change");
+          props.history.push("/student");
+        }}>
         <Row className='form-group'>
           <Label htmlFor='name' md={2}>
             Name
           </Label>
           <Col md={10}>
             <Control.text
+              onChange={(e) => setName(e.target.value)}
+              value={name}
               className='form-control'
               model='.name'
               name='name'
@@ -91,7 +71,16 @@ const Students = () => {
             Roll No.
           </Label>
           <Col md={10}>
-            <Control.text className='form-control' model='.rollNo' name='rollNo' id='rollNo' placeholder='Roll No.' validators={{ isNumber }} />
+            <Control.text
+              value={rollNo}
+              onChange={(e) => setRollNo(e.target.value)}
+              className='form-control'
+              model='.rollNo'
+              name='rollNo'
+              id='rollNo'
+              placeholder='Roll No.'
+              validators={{ isNumber }}
+            />
             <Errors
               className='text-danger'
               model='.rollNo'
@@ -107,7 +96,7 @@ const Students = () => {
             Class no
           </Label>
           <Col md={10}>
-            <Control.select model='.classNo' defaultValue='1' name='classNo' id='classNo' className='form-control'>
+            <Control.select model='.classNo' defaultValue={classNo} name='classNo' id='classNo' className='form-control'>
               <option>1</option>
               <option>2</option>
               <option>3</option>
@@ -130,6 +119,8 @@ const Students = () => {
           <Col md={10}>
             <Control.text
               className='form-control'
+              onChange={(e) => setSection(e.target.value)}
+              value={section}
               model='.section'
               name='section'
               id='section'
@@ -148,28 +139,13 @@ const Students = () => {
         <Row className='form-group'>
           <Col md={{ size: 10, offset: 0 }}>
             <Button type='submit' color='primary'>
-              Add student
+              Edit student
             </Button>
           </Col>
         </Row>
       </Form>
-      <h4>Student list</h4>
-      <Table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Roll No</th>
-            <th>Class no</th>
-            <th>Section</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <RenderStudents />
-        </tbody>
-      </Table>
     </div>
   );
 };
 
-export default withRouter(Students);
+export default withRouter(EditStudent);

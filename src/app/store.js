@@ -1,7 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { createForms } from "react-redux-form";
-import { STUDENT } from "../redux/forms";
-import studentReducer from "../redux/student";
+import { STUDENT } from "../components/student/studentForms";
+import studentReducer from "../components/student/studentSlice";
+import teacherReducer from "../components/teacher/teacherSlice";
+import { TEACHER } from "../components/teacher/teacherForms";
 
 const middlewares = [];
 if (process.env.NODE_ENV === `development`) {
@@ -11,7 +13,8 @@ if (process.env.NODE_ENV === `development`) {
 }
 const reducer = {
   students: studentReducer,
-  ...createForms({ student: STUDENT }),
+  teachers: teacherReducer,
+  ...createForms({ student: STUDENT, teacher: TEACHER }),
 };
 
 const store = configureStore({

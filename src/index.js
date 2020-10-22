@@ -4,6 +4,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/main.css";
+import "react-dual-listbox/lib/react-dual-listbox.css";
 import ReactDOM from "react-dom";
 ReactDOM.render(
   <App />,

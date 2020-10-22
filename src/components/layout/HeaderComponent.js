@@ -20,7 +20,10 @@ export const Header = () => {
                 <NavLink href='/home'>Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href='/students'>Students</NavLink>
+                <NavLink href='/student'>Student</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href='/teacher'>Teacher</NavLink>
               </NavItem>
             </Nav>
           </div>

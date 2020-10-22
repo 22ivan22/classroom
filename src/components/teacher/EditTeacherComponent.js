@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import DualListBox from "react-dual-listbox";
 import { Button, Label, Col, Row } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { editStudent, selectStudentById } from "../redux/student";
+import { editTeacher, selectTeacherById } from "./teacherSlice";
 import { Control, Errors, Form } from "react-redux-form";
-import { Redirect, Route, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
@@ -16,31 +16,54 @@ const validSection = (val) => {
   return regexSection.test(val);
 };
 
-const EditStudent = (props) => {
+const EditTeacher = (props) => {
   const dispatch = useDispatch();
+  const teacher = useSelector((state) => selectTeacherById(state, props.teacherIDparam));
 
-  const student = useSelector((state) => selectStudentById(state, props.studentIDparam));
-  const [name, setName] = useState(student.name);
-  const [rollNo, setRollNo] = useState(student.rollNo);
-  const [classNo, setClassNo] = useState(student.classNo);
-  const [section, setSection] = useState(student.section);
-
+  console.log("teacher:" + props.teacherIDparam);
+  const [name, setName] = useState(teacher.name);
+  const [rollNo, setRollNo] = useState(teacher.rollNo);
+  const [classList, setClassList] = useState(teacher.classList);
+  const [sectionList, setSectionList] = useState(teacher.sectionList);
+  const classOptions = [
+    { value: 1, label: "1" },
+    { value: 2, label: "2" },
+    { value: 3, label: "3" },
+    { value: 4, label: "4" },
+    { value: 5, label: "5" },
+    { value: 6, label: "6" },
+    { value: 7, label: "7" },
+    { value: 8, label: "8" },
+    { value: 9, label: "9" },
+    { value: 10, label: "10" },
+    { value: 11, label: "11" },
+    { value: 12, label: "12" },
+  ];
+  const sectionOptions = [
+    { value: "A", label: "A" },
+    { value: "B", label: "B" },
+    { value: "C", label: "C" },
+    { value: "D", label: "D" },
+    { value: "E", label: "E" },
+    { value: "F", label: "F" },
+  ];
+  console.log("classList" + JSON.stringify(classList));
   return (
     <div>
       <Form
-        model='student'
+        model='teacher'
         onSubmit={(values) => {
-          const valueswithid = {
-            id: student.id,
+          const valueswithId = {
+            id: teacher.id,
             name: values.name,
             rollNo: values.rollNo,
-            classNo: values.classNo,
-            section: values.section,
+            classList: classList,
+            sectionList: sectionList,
           };
 
-          dispatch(editStudent(valueswithid));
+          dispatch(editTeacher(valueswithId));
           alert("Sucesful change");
-          props.history.push("/students");
+          props.history.push("/teacher");
         }}>
         <Row className='form-group'>
           <Label htmlFor='name' md={2}>
@@ -54,7 +77,7 @@ const EditStudent = (props) => {
               model='.name'
               name='name'
               id='name'
-              placeholder='Students name'
+              placeholder='Teachers name'
               validators={{ required, minLength: minLength(3), maxLength: maxLength(15) }}
             />
             <Errors
@@ -92,24 +115,18 @@ const EditStudent = (props) => {
           </Col>
         </Row>
         <Row className='form-group'>
-          <Label htmlFor='classNo' md={2}>
-            Class no
+          <Label htmlFor='classList' md={2}>
+            Class list
           </Label>
           <Col md={10}>
-            <Control.select model='.classNo' defaultValue={classNo} name='classNo' id='classNo' className='form-control'>
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-              <option>6</option>
-              <option>7</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10</option>
-              <option>11</option>
-              <option>12</option>
-            </Control.select>
+            <DualListBox
+              model='.classList'
+              name='classList'
+              id='classList'
+              options={classOptions}
+              selected={classList}
+              onChange={(classList) => setClassList(classList)}
+            />
           </Col>
         </Row>
         <Row className='form-group'>
@@ -117,19 +134,17 @@ const EditStudent = (props) => {
             Section
           </Label>
           <Col md={10}>
-            <Control.text
-              className='form-control'
-              onChange={(e) => setSection(e.target.value)}
-              value={section}
-              model='.section'
-              name='section'
-              id='section'
-              placeholder='Section'
-              validators={{ required, validSection, maxLength: maxLength(1) }}
+            <DualListBox
+              model='.sectionList'
+              name='sectionList'
+              id='sectionList'
+              options={sectionOptions}
+              selected={sectionList}
+              onChange={(sectionList) => setSectionList(sectionList)}
             />
             <Errors
               className='text-danger'
-              model='.section'
+              model='.sectionList'
               show='touched'
               messages={{ required: "Required", maxLength: "Must have maximum length of 1 character", validSection: "Must be in range A-F" }}
             />
@@ -139,7 +154,7 @@ const EditStudent = (props) => {
         <Row className='form-group'>
           <Col md={{ size: 10, offset: 0 }}>
             <Button type='submit' color='primary'>
-              Edit student
+              Edit teacher
             </Button>
           </Col>
         </Row>
@@ -148,4 +163,4 @@ const EditStudent = (props) => {
   );
 };
 
-export default withRouter(EditStudent);
+export default withRouter(EditTeacher);

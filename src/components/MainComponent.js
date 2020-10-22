@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect, withRouter, useParams } from "react-router-dom";
-import { Footer } from "./FooterComponent";
-import { Header } from "./HeaderComponent";
-import { Home } from "./HomeComponent";
-import Students from "./StudentsComponent";
-import EditStudent from "./EditStudentComponent";
+import { Footer } from "./layout/FooterComponent";
+import { Header } from "./layout/HeaderComponent";
+import { Home } from "./layout/HomeComponent";
+import Student from "./student/StudentComponent";
+import EditStudent from "./student/EditStudentComponent";
+import AddStudent from "./student/AddStudentComponent";
+import Teacher from "./teacher/TeacherComponent";
+import AddTeacher from "./teacher/AddTeacherComponent";
+import EditTeacher from "./teacher/EditTeacherComponent";
 
 class Main extends Component {
   render() {
@@ -12,13 +16,25 @@ class Main extends Component {
       return <Home />;
     };
     const StudentsPage = () => {
-      return <Students />;
+      return <Student />;
     };
-
-    function EditStudentPage() {
+    const AddStudentPage = () => {
+      return <AddStudent />;
+    };
+    const TeacherPage = () => {
+      return <Teacher />;
+    };
+    const AddTeacherPage = () => {
+      return <AddTeacher />;
+    };
+    const EditTeacherPage = () => {
+      let { teacherID } = useParams();
+      return <EditTeacher teacherIDparam={teacherID} />;
+    };
+    const EditStudentPage = () => {
       let { studentID } = useParams();
       return <EditStudent studentIDparam={studentID} />;
-    }
+    };
 
     return (
       <React.Fragment>
@@ -30,10 +46,12 @@ class Main extends Component {
           <div className='row'>
             <Switch>
               <Route path='/home' component={HomePage} />
-              <Route exact path='/students' component={StudentsPage} />
-              <Route path='/students/:studentID'>
-                <EditStudentPage />
-              </Route>
+              <Route path='/teacher' component={TeacherPage} />
+              <Route path='/addTeacher' component={AddTeacherPage} />
+              <Route path='/editTeacher/:teacherID' component={EditTeacherPage} />
+              <Route exact path='/student' component={StudentsPage} />
+              <Route path='/addStudent' component={AddStudentPage} />
+              <Route path='/editStudent/:studentID' component={EditStudentPage} />
 
               {/*<Route exact path='/contactus' component={ContactPage} />
               <Route exact path='/aboutus' component={AboutPage} /> */}

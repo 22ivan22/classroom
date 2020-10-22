@@ -9,7 +9,9 @@
 .navbar-light .navbar-nav .nav-link {
   color: #f6f5f3;
 }
-
+form {
+  width: auto;
+}
 .jumbotron {
   width: 100% !important;
   position: relative;
